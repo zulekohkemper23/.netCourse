@@ -2,22 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _netCourse.Data;
 using _netCourse.Dtos.Character;
 using _netCourse.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace _netCourse.Services.CharacterService
 {
     public class CharacterService : ICharacterService
     {
-        private static List<Character> characters = new List<Character> {
-            new Character(),
-            new Character { Id = 1, Name = "Nala"}
-        };
+        private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly DataContext context;
 
-        public CharacterService(IMapper mapper)
+        public CharacterService(IMapper mapper, DataContext context)
         {
+            _context = context;
             _mapper = mapper;
         }
 
@@ -25,9 +26,9 @@ namespace _netCourse.Services.CharacterService
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
             Character characterId = _mapper.Map<Character>(character);
-            characterId.Id = characters.Max(c => c.Id) + 1;
-            characters.Add(characterId);
-            serviceResponse.Data = characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
+            _context.characters.Add(characterId);
+            await _context.SaveChangesAsync();
+            serviceResponse.Data = await _context.characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToListAsync();
             return serviceResponse;
         }
 
@@ -36,9 +37,10 @@ namespace _netCourse.Services.CharacterService
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
             try
             {
-                Character character = characters.First(c => c.Id == id);
-                characters.Remove(character);
-                serviceResponse.Data = characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
+                Character character = await _context.characters.FirstAsync(c => c.Id == id);
+                _context.characters.Remove(character);
+                await _context.SaveChangesAsync();
+                serviceResponse.Data = _context.characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
             }
             catch (Exception ex)
             {
@@ -52,14 +54,16 @@ namespace _netCourse.Services.CharacterService
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAll()
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            serviceResponse.Data = characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
+            var dbCharacters = await _context.characters.ToListAsync();
+            serviceResponse.Data = dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
             return serviceResponse;
         }
 
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterDto(int id)
         {
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
-            serviceResponse.Data = _mapper.Map<GetCharacterDto>(characters.FirstOrDefault(c => c.Id == id));
+            var dbCharacters = await _context.characters.FirstOrDefaultAsync(c => c.Id == id);
+            serviceResponse.Data = _mapper.Map<GetCharacterDto>(dbCharacters);
             return serviceResponse;
         }
 
@@ -68,15 +72,16 @@ namespace _netCourse.Services.CharacterService
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
             try
             {
-                Character character = characters.FirstOrDefault(c => c.Id == updateCharacterDto.Id);
+                Character character = await _context.characters.FirstOrDefaultAsync(c => c.Id == updateCharacterDto.Id);
 
                 character.Name = updateCharacterDto.Name;
                 character.Strength = updateCharacterDto.Strength;
                 character.Defense = updateCharacterDto.Defense;
-                character.HitPoints = character.HitPoints;
-                character.Intelligence = character.Intelligence;
-                character.Class = character.Class;
+                character.HitPoints = updateCharacterDto.HitPoints;
+                character.Intelligence = updateCharacterDto.Intelligence;
+                character.Class = updateCharacterDto.Class;
 
+                await _context.SaveChangesAsync();
                 serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
             }
             catch (Exception ex)
