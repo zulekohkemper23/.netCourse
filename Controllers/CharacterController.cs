@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using _netCourse.Dtos.Character;
 using _netCourse.Models;
 using _netCourse.Services.CharacterService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _netCourse.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class CharacterController : ControllerBase
@@ -20,8 +22,8 @@ namespace _netCourse.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet("GetAll")]
-
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> Get()
         {
             var getAllCharacters = await _characterService.GetAll();

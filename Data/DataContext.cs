@@ -1,3 +1,4 @@
+using _netCourse.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace _netCourse.Data
@@ -9,5 +10,6 @@ namespace _netCourse.Data
             
         }
         public DbSet<Character> characters { get; set; }
+        public DbSet<User> users { get; set; }
     }
 }

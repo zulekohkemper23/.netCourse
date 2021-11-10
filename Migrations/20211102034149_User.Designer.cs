@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _netCourse.Data;
 
 namespace _netCourse.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211102034149_User")]
+    partial class User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,12 +46,7 @@ namespace _netCourse.Migrations
                     b.Property<int>("Strength")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("characters");
                 });
@@ -73,20 +70,6 @@ namespace _netCourse.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("_netCourse.Character", b =>
-                {
-                    b.HasOne("_netCourse.Models.User", "User")
-                        .WithMany("characters")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("_netCourse.Models.User", b =>
-                {
-                    b.Navigation("characters");
                 });
 #pragma warning restore 612, 618
         }
