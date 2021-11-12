@@ -6,6 +6,8 @@ using _netCourse.Models;
 using _netCourse.Services.CharacterService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
 
 namespace _netCourse.Controllers
 {
@@ -22,11 +24,11 @@ namespace _netCourse.Controllers
 
         }
 
-        [AllowAnonymous]
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> Get()
         {
-            var getAllCharacters = await _characterService.GetAll();
+            int id = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var getAllCharacters = await _characterService.GetAll(id);
             return Ok(getAllCharacters);
         }
 

@@ -51,10 +51,10 @@ namespace _netCourse.Services.CharacterService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAll()
+        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAll(int userId)
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            var dbCharacters = await _context.characters.ToListAsync();
+            var dbCharacters = await _context.characters.Where(u => u.User.Id == userId).ToListAsync();
             serviceResponse.Data = dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
             return serviceResponse;
         }
