@@ -13,8 +13,8 @@ namespace _netCourse.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    usernam = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>

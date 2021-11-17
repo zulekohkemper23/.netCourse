@@ -7,7 +7,7 @@ using _netCourse.Services.CharacterService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-
+using _netCourse.Dtos.Skills;
 
 namespace _netCourse.Controllers
 {
@@ -27,8 +27,7 @@ namespace _netCourse.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> Get()
         {
-            int id = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var getAllCharacters = await _characterService.GetAll(id);
+            var getAllCharacters = await _characterService.GetAll();
             return Ok(getAllCharacters);
         }
 
@@ -66,6 +65,12 @@ namespace _netCourse.Controllers
                 return Ok(response);
             }
             return BadRequest(response);
+        }
+
+        [HttpPost("Skill")]
+        public async Task<ActionResult<ServiceResponse<GetCharacterDto>>> AddCharacterSkill(AddCharacterSkillsDto newCharacterSkill)
+        {
+            return Ok(await _characterService.AddCharacterSkill(newCharacterSkill));
         }
     }
 }

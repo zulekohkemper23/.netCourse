@@ -1,7 +1,8 @@
 
+using System.Collections.Generic;
 using _netCourse.Models;
 
-namespace _netCourse 
+namespace _netCourse.Models
 {
     public class Character 
     {
@@ -13,5 +14,7 @@ namespace _netCourse
         public int Intelligence { get; set; } = 10;
         public RpgClass Class { get; set; } = RpgClass.Knight;
         public User User { get; set; }
+        public Weapons weapon { get; set; }
+        public List<Skills> Skill { get; set; }
     }
 }

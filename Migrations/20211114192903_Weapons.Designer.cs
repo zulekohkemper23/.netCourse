@@ -3,36 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _netCourse.Data;
 
 namespace _netCourse.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211114192903_Weapons")]
+    partial class Weapons
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CharacterSkills", b =>
-                {
-                    b.Property<int>("charactersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("skillId")
-                        .HasColumnType("int");
-
-                    b.HasKey("charactersId", "skillId");
-
-                    b.HasIndex("skillId");
-
-                    b.ToTable("CharacterSkills");
-                });
 
             modelBuilder.Entity("_netCourse.Character", b =>
                 {
@@ -67,44 +54,6 @@ namespace _netCourse.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("characters");
-                });
-
-            modelBuilder.Entity("_netCourse.Models.Skills", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("damage")
-                        .HasColumnType("int");
-
-                    b.Property<string>("name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("skills");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            damage = 30,
-                            name = "Fireball"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            damage = 20,
-                            name = "Frenzy"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            damage = 50,
-                            name = "Blizzard"
-                        });
                 });
 
             modelBuilder.Entity("_netCourse.Models.User", b =>
@@ -150,21 +99,6 @@ namespace _netCourse.Migrations
                         .IsUnique();
 
                     b.ToTable("weapons");
-                });
-
-            modelBuilder.Entity("CharacterSkills", b =>
-                {
-                    b.HasOne("_netCourse.Character", null)
-                        .WithMany()
-                        .HasForeignKey("charactersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("_netCourse.Models.Skills", null)
-                        .WithMany()
-                        .HasForeignKey("skillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("_netCourse.Character", b =>

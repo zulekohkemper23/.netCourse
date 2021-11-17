@@ -17,6 +17,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.AspNetCore.Http;
+using _netCourse.Services.WeaponService;
 
 namespace _netCourse
 {
@@ -49,6 +51,7 @@ namespace _netCourse
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<ICharacterService, CharacterService>();
+            services.AddScoped<IWeaponService, WeaponService>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -61,6 +64,8 @@ namespace _netCourse
                         ValidateAudience = false
                     };
                 });
+
+            services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
