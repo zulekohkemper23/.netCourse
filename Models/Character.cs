@@ -16,5 +16,8 @@ namespace _netCourse.Models
         public User User { get; set; }
         public Weapons weapon { get; set; }
         public List<Skills> Skill { get; set; }
+        public int Fights { get; set; }
+        public int Victories { get; set; }
+        public int defeats { get; set; }
     }
 }
